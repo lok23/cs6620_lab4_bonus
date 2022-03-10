@@ -1,7 +1,11 @@
+# latest version of docker-compose
 version: "3"
+
+# web app composed of 3 parts - client, server, backend-database
 services:
   react-client:
     image: lok23/react-client
+    # keep container alive after startup
     stdin_open: true
     ports: 
       - "3000:3000"
@@ -13,9 +17,11 @@ services:
       - "5000:5000"
     networks:
       - mern-app
+    # need mongo before work
     depends_on:
       - mongo
   mongo:
+    # publicly available mongodb on dockerhub
     image: mongo:3.6.19-xenial
     ports:
       - "27017:27017"
@@ -23,9 +29,12 @@ services:
       - mern-app
     volumes:
       - mongo-data:/data/db
+# everything below is not necessary, but makes everything work faster
+# add all services to this network
 networks:
   mern-app:
     driver: bridge
+# docker volume enables persistence across restarts
 volumes:
   mongo-data:
     driver: local
